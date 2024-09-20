@@ -3,6 +3,7 @@ from django.db import models
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 
+# Модель Transport (Транспорт)
 class Transport(models.Model):
     STATUS_CHOICES = [
         ('free', 'Вільний'),
@@ -21,11 +22,21 @@ class Transport(models.Model):
         verbose_name = 'Транспорт'
         verbose_name_plural = 'Транспортні засоби'
 
+class CustomUser(models.Model):  # Розширена модель для користувачів, якщо потрібна додаткова інформація
+    username = models.CharField(max_length=24, default="Jonh Doe")
+    password = models.CharField(max_length=64)
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
+
+    def __str__(self):
+        return self.username
+    
+
 class Booking(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    username = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     transport = models.ForeignKey(Transport, on_delete=models.CASCADE)
-    booking_time_start = models.DateTimeField()
-    booking_time_end = models.DateTimeField()
+    booking_time_start = models.DateTimeField(auto_now_add=True)
+    # days = models.DateField()
+    # booking_time_end = booking_time_start + days
 
     def clean(self):
         overlapping_bookings = Booking.objects.filter(
@@ -33,13 +44,15 @@ class Booking(models.Model):
             booking_time_start__lt=self.booking_time_end,
             booking_time_end__gt=self.booking_time_start
         )
-
         if overlapping_bookings.exists():
             raise ValidationError('Цей транспорт вже заброньовано на вибраний час.')
 
+    def calculate_total_price(self, days):
+        return days * self.transport.price
+
     def save(self, *args, **kwargs):
         self.clean()
-        if self.booking_time_start <= timezone.now() <= self.booking_time_end:
+        if self.booking_time_start <= self.booking_time_end:
             self.transport.status = 'busy'
         else:
             self.transport.status = 'free'

@@ -1,0 +1,10 @@
+<ul>
+    {% for books in booking_list %}
+    <li>
+        <h4>{{book.user}}</h4>
+        <h6>{{book.transport}}</h6>
+        <p>{{book.booking_time_start}}</p>
+        <p>{{book.booking_time_end}}</p>
+    </li>
+    {% endfor %}
+</ul>

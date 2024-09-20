@@ -1,0 +1,19 @@
+<form method="post">
+    {% csrf_token %}
+    
+    <!-- Поле для введення користувача -->
+    <input type="text" name="username" placeholder="Введіть ім'я користувача">
+    
+    <!-- Вибір транспорту -->
+    <select id="transport" name="transport">
+        {% for transport in transport_list %}
+            <option value="{{ transport.id }}">{{ transport.name }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Поле для введення часу бронювання -->
+    <input type="datetime" name="booking_time" placeholder="До якого числа бронюється">
+
+    <!-- Кнопка відправки форми -->
+    <input type="submit" value="Забронювати">
+</form>
