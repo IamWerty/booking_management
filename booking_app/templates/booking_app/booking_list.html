@@ -1,0 +1,13 @@
+{% extends 'booking_app/base.html' %}
+
+{% block content%}
+    <ul>
+        {% for book in booking_list %}
+        <li>
+            <h4>{{book.username}}</h4>
+            <h6>{{book.transport}}</h6>
+            <p>{{book.get_booking_duration}}</p>
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

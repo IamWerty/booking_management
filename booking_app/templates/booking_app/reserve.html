@@ -1,0 +1,11 @@
+<form method="post">
+    {% csrf_token %}
+    <input type="text" name="username" placeholder="Введіть ім'я користувача">
+    <select id="transport" name="transport">
+        {% for transport in transport_list %}
+            <option value="{{ transport.id }}">{{ transport.name }}</option>
+        {% endfor %}
+    </select>
+    <input type="datetime-local" name="booking_end_time" placeholder="До якого числа бронюється">
+    <input type="submit" value="Забронювати">
+</form>
