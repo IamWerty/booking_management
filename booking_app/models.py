@@ -1,9 +1,9 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 
-# Модель Transport (Транспорт)
+# Модель Transport
 class Transport(models.Model):
     STATUS_CHOICES = [
         ('free', 'Вільний'),
@@ -22,45 +22,77 @@ class Transport(models.Model):
         verbose_name = 'Транспорт'
         verbose_name_plural = 'Транспортні засоби'
 
-class CustomUser(models.Model):  # Розширена модель для користувачів, якщо потрібна додаткова інформація
-    username = models.CharField(max_length=24, default="Jonh Doe")
-    password = models.CharField(max_length=64)
+
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, username, password=None, **extra_fields):
+        if not email:
+            raise ValueError('Email обов’язковий для створення користувача')
+        email = self.normalize_email(email)
+        user = self.model(email=email, username=username, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, username, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        return self.create_user(email, username, password, **extra_fields)
+
+class CustomUser(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField(unique=True)
+    username = models.CharField(max_length=24, unique=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
+    date_joined = models.DateTimeField(default=timezone.now)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
+    objects = CustomUserManager()
+
+    USERNAME_FIELD = 'email'  # Поле для аутентифікації
+    REQUIRED_FIELDS = ['username']  # Поле обов'язкове під час створення користувача
 
     def __str__(self):
         return self.username
-    
+
+    class Meta:
+        verbose_name = 'Користувач'
+        verbose_name_plural = 'Користувачі'
 
 class Booking(models.Model):
     username = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     transport = models.ForeignKey(Transport, on_delete=models.CASCADE)
-    booking_time_start = models.DateTimeField(auto_now_add=True)
-    # days = models.DateField()
-    # booking_time_end = booking_time_start + days
+    booking_start_time = models.DateTimeField(default=timezone.now)
+    booking_end_time = models.DateTimeField()
 
     def clean(self):
+        # Перевірка на перетин часу бронювання
         overlapping_bookings = Booking.objects.filter(
             transport=self.transport,
-            booking_time_start__lt=self.booking_time_end,
-            booking_time_end__gt=self.booking_time_start
+            booking_start_time__lt=self.booking_end_time,
+            booking_end_time__gt=self.booking_start_time
         )
         if overlapping_bookings.exists():
             raise ValidationError('Цей транспорт вже заброньовано на вибраний час.')
 
-    def calculate_total_price(self, days):
-        return days * self.transport.price
-
     def save(self, *args, **kwargs):
+        # Перевірка і зміна статусу транспорту
         self.clean()
-        if self.booking_time_start <= self.booking_time_end:
+        if self.booking_start_time <= self.booking_end_time:
             self.transport.status = 'busy'
         else:
             self.transport.status = 'free'
         self.transport.save()
         super().save(*args, **kwargs)
 
+    def get_booking_duration(self):
+        # Обчислення різниці між поточним часом і кінцем бронювання
+        now = timezone.now()
+        duration = self.booking_end_time - now
+        return duration
+
     def __str__(self):
-        return f"{self.user.username} забронював {self.transport.name} з {self.booking_time_start} по {self.booking_time_end}"
+        return f"{self.username} забронював {self.transport.name} з {self.booking_start_time} по {self.booking_end_time}"
 
     class Meta:
         verbose_name = 'Бронювання'
