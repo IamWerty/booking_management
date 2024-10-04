@@ -1,13 +1,15 @@
 {% extends 'booking_app/base.html' %}
 
-{% block content%}
+{% load static %}
+
+{% block content %}
     <ul>
         {% for transport in transport_list %}
         <li>
-            <h4>{{transport.name}}</h4>
-            <h6>{{transport.description}}</h6>
-            <p>{{transport.price}}</p>
-            <p>{{transport.status}}</p>
+            <h4>{{ transport.name }}</h4>
+            <h6>{{ transport.description }}</h6>
+            <p>{{ transport.status }}</p>
+            <p>{{ transport.price }}</p>
         </li>
         {% endfor %}
     </ul>

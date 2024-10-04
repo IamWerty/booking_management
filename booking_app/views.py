@@ -1,11 +1,13 @@
 from django.shortcuts import redirect, render
 from .models import Transport, Booking, CustomUser
-from django.contrib.auth import login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from .forms import CustomUserCreationForm, BookingForm
 
 # Список транспорту
 def transport_list(request):
-    transport_list = Transport.objects.all()
+    transport_list = Transport.objects.filter(status='free')
     return render(request, "booking_app/transport_list.html", {'transport_list':transport_list})
 
 # Список бронювань
@@ -53,7 +55,33 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('reserve')  # Переадресація на іншу сторінку
+            return redirect('reserve')  # Переадресація на сторінку бронювання
     else:
         form = CustomUserCreationForm()
     return render(request, 'booking_app/register.html', {'form': form})
+
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('reserve')  # Переадресація на сторінку бронювання або іншу потрібну сторінку
+        else:
+            return render(request, 'booking_app/login.html', {'error': 'Невірний логін або пароль'})
+    else:
+        return render(request, 'booking_app/login.html')
+    
+def index(request):
+    return render(request, "booking_app/index.html")
+
+@login_required
+def account_info(request):
+    return render(request, 'booking_app/account_info.html')
+
+@require_POST
+def logout_view(request):
+    logout(request)
+    return redirect('login')

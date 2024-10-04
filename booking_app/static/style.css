@@ -1,3 +1,409 @@
 body {
-    background: red;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-top: 20%;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    width: 95%;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #555;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    background-color: #fff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.user-menu-button {
+    display: flex;
+}
+
+.user-menu-button.btn {
+    width: 50%;
+    padding: 12px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+p {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+p a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+p a:hover {
+    text-decoration: underline;
+}
+
+/* Вирівнювання полів форми */
+input[type="text"], input[type="email"], input[type="password"] {
+    display: block;
+    width: 100%;
+    height: 40px;
+    padding: 0 10px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+.error {
+    color: red;
+    text-align: center;
+    margin-top: 10px;
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    .btn {
+        padding: 10px;
+    }
+}
+
+
+
+
+
+header {
+    background-color: #007bff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 20px;
+}
+
+.navbar-left, .navbar-right {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-left a, .navbar-right a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 16px;
+}
+
+.navbar-left a:hover, .navbar-right a:hover {
+    text-decoration: underline;
+}
+
+.logo img {
+    width: 40px;
+    height: 40px;
+}
+
+.btn {
+    padding: 10px 20px;
+    background-color: #0056b3;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #003d80;
+}
+
+/* Контент для демонстрації скролінгу */
+.content {
+    padding: 100px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Адаптивність */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navbar-left, .navbar-right {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navbar-right a {
+        margin-top: 10px;
+    }
+}
+
+
+
+
+.fade-in {
+    opacity: 0;
+    animation: fadeIn 1s ease-in forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px); /* Легкий рух знизу вверх */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+
+
+ul {
+    display: flex;
+    flex-wrap: wrap; /* Забезпечує перенесення елементів на новий рядок */
+    gap: 20px; /* Відстань між елементами */
+    padding: 0;
+    margin: 20px auto;
+    margin-top: 20%;
+    max-width: 1000px; /* Максимальна ширина контейнера */
+    list-style-type: none; /* Прибираємо стандартні маркери списку */
+}
+
+/* Елементи списку */
+li {
+    text-align: center;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    flex: 1 1 calc(33% - 20px); /* Три елементи в рядку, віднімаємо відстань між елементами */
+    margin-bottom: 20px; /* Відступи між рядками */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Легка тінь для блоків */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Анімація на наведення */
+}
+
+li:hover {
+    transform: translateY(-5px); /* Легкий ефект підняття при наведенні */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Сильніша тінь при наведенні */
+}
+
+h4 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+h6 {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 10px;
+}
+
+/* Стиль для ціни та статусу */
+li p:last-child {
+    font-weight: bold;
+    color: #28a745; /* Колір для статусу чи ціни */
+}
+
+/* Адаптивність для мобільних пристроїв */
+@media (max-width: 768px) {
+    ul {
+        padding: 10px;
+    }
+
+    li {
+        flex: 1 1 calc(50% - 20px); /* Два елементи в рядку на мобільних пристроях */
+    }
+
+    h4 {
+        font-size: 1.2rem;
+    }
+
+    h6 {
+        font-size: 0.9rem;
+    }
+
+    p {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    li {
+        flex: 1 1 100%; /* Один елемент в рядку на дуже малих екранах */
+    }
+}
+
+
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+/* Стилі для полів введення */
+input[type="text"],
+input[type="datetime-local"],
+select {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 100%;
+}
+
+/* Стиль для кнопки відправки */
+input[type="submit"] {
+    padding: 10px;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* При наведенні на кнопку */
+input[type="submit"]:hover {
+    background-color: #003d80;
+}
+
+/* Стиль для вибору транспорту */
+select {
+    font-size: 16px;
+    padding: 10px;
+}
+
+
+
+
+
+
+.user-menu {
+    position: relative;
+    display: inline-block;
+}
+
+.user-icon {
+    width: 30px;
+    cursor: pointer;
+    border-radius: 12px;
+}
+
+.user-menu .dropdown {
+    border-radius: 4px;
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #f9f9f9;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    width: 150px;
+}
+
+.user-menu:hover .dropdown {
+    display: block;
+    border-radius: 16px;
+}
+
+.dropdown a {
+    display: block;
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+}
+
+.dropdown a:hover {
+    background-color: #f1f1f1;
 }

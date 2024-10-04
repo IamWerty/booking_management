@@ -6,10 +6,49 @@
     <title>Document</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="icon" href="{% static 'imgs/logo.png' %}" type="image/x-icon">
 </head>
 <body>
-    {% block content %}
-    <!-- Вміст блоку тут -->
-    {% endblock %}
+    <header>
+        <nav class="navbar">
+            <div class="navbar-left">
+                <!-- Іконка сайту -->
+                <a href="/" class="logo">
+                    <img src="{% static 'imgs/logo.png' %}" alt="Лого сайту">
+                </a>
+                <!-- Посилання на секції -->
+                <a href="/transport">Транспорт</a>
+                <a href="/reserve">Забронювати</a>
+                <a href="/booking">Бронювання</a>
+            </div>
+
+            <div class="navbar-right">
+                {% if user.is_authenticated %}
+                    <!-- Іконка користувача -->
+                    <div class="user-menu">
+                        <img src="{% static 'imgs/account_avatar.png' %}" alt="Профіль" class="user-icon">
+                        <div class="dropdown">
+                            <a href="/account_info">Продивитися інформацію про акаунт</a>
+                            <div class="user-menu-button">
+                                <form action="/logout" method="post" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn">Вийти</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="/login" class="btn">Логін</a>
+                    <a href="/register" class="btn">Зареєструватися</a>
+                {% endif %}
+                <a href="/contact" class="btn">Підтримка</a>
+            </div>
+        </nav>
+    </header>
+    <div id="content" class="fade-in">
+        {% block content %}
+        <!-- Вміст блоку тут -->
+        {% endblock %}
+    </div>
 </body>
 </html>
