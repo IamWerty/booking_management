@@ -3,13 +3,25 @@
 {% block content %}
     <form method="post">
         {% csrf_token %}
-        <input type="text" name="username" placeholder="Введіть ім'я користувача">
+        <label for="username" value="{{ user.username }}"></label>
+        <label for="transport">Оберіть транспорт:</label>
         <select id="transport" name="transport">
             {% for transport in transport_list %}
                 <option value="{{ transport.id }}">{{ transport.name }}</option>
             {% endfor %}
         </select>
-        <input type="datetime-local" name="booking_end_time" placeholder="До якого числа бронюється">
+        
+        <label for="booking_end_time">До якого числа бронюється:</label>
+        <input type="datetime-local" id="booking_end_time" name="booking_end_time" required>
+        
         <input type="submit" value="Забронювати">
     </form>
+
+    {% if form.errors %}
+        <ul>
+            {% for field, errors in form.errors.items %}
+                <li>{{ field }}: {{ errors }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 {% endblock %}

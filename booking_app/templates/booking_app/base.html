@@ -30,7 +30,7 @@
                         <div class="dropdown">
                             <a href="/account_info">Продивитися інформацію про акаунт</a>
                             <div class="user-menu-button">
-                                <form action="/logout" method="post" style="display: inline;">
+                                <form action="{% url 'logout' %}" method="post" style="display: inline;">
                                     {% csrf_token %}
                                     <button type="submit" class="btn">Вийти</button>
                                 </form>
@@ -45,6 +45,16 @@
             </div>
         </nav>
     </header>
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert alert-success">
+                {{ message }}
+                <a href="{% url 'pay' %}" class="btn btn-success">Оплатити</a>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
     <div id="content" class="fade-in">
         {% block content %}
         <!-- Вміст блоку тут -->

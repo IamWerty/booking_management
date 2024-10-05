@@ -22,11 +22,7 @@ class CustomUserCreationForm(UserCreationForm):
             user.save()
         return user
 
-class BookingForm(forms.Form):
-    username = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Введіть ім\'я користувача'}))
-    transport = forms.ModelChoiceField(queryset=Transport.objects.all(), empty_label="Оберіть транспорт")
-    booking_end_time = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
-
+class BookingForm(forms.ModelForm):
     class Meta:
         model = Booking
-        fields = ['username', 'transport', 'booking_end_time']
+        fields = ['transport', 'booking_end_time']

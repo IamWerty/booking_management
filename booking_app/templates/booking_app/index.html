@@ -1,4 +1,54 @@
 {% extends 'booking_app/base.html' %}
+{% load static %}
+{% block content %}
+    <style>
+        body {
+            background-image: url('{% static "imgs/image.jpg" %}');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;  /* Займає всю висоту вікна браузера */
+            display: flex;
+            backdrop-filter: blur(3px);
+            z-index: 1;
+        }
 
-{% block content%}
+        p {
+            font-size: 24px;
+            font-weight: 900;
+            color: rgb(105, 105, 255);
+            margin-top: -5%;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 1500;
+            color: blue;
+            text-align: left;
+        }
+        .white-box-container {
+            display: flex;
+            height: 100%;
+            width: 100%;
+        }
+
+        .white-box {
+            margin-left: -90% ;
+            background-color:azure;
+            width: 300px;
+            height: 150px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            border-radius: 24px;
+            padding: 20px;
+        }
+
+    </style>
+    <div class="white-box-container">
+        <div class="white-box">
+            <h1>VeloGo</h1>
+            <p>На колесах й до мрій!</p>
+        </div>
+    </div>
 {% endblock %}

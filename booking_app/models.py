@@ -2,8 +2,10 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.db import models
 from django.utils import timezone
 from django.core.exceptions import ValidationError
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
+from datetime import timedelta
 
-# Модель Transport
 class Transport(models.Model):
     STATUS_CHOICES = [
         ('free', 'Вільний'),
@@ -14,6 +16,14 @@ class Transport(models.Model):
     description = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='free')
+
+    def check_and_update_status(self):
+        # Якщо є активні бронювання, залишаємо статус зайнятий
+        if self.booking_set.filter(booking_end_time__gt=timezone.now()).exists():
+            self.status = 'busy'
+        else:
+            self.status = 'free'
+        self.save()
 
     def __str__(self):
         return self.name
@@ -66,7 +76,6 @@ class Booking(models.Model):
     booking_end_time = models.DateTimeField()
 
     def clean(self):
-        # Перевірка на перетин часу бронювання
         overlapping_bookings = Booking.objects.filter(
             transport=self.transport,
             booking_start_time__lt=self.booking_end_time,
@@ -76,17 +85,12 @@ class Booking(models.Model):
             raise ValidationError('Цей транспорт вже заброньовано на вибраний час.')
 
     def save(self, *args, **kwargs):
-        # Перевірка і зміна статусу транспорту
         self.clean()
-        if self.booking_start_time <= self.booking_end_time:
-            self.transport.status = 'busy'
-        else:
-            self.transport.status = 'free'
-        self.transport.save()
         super().save(*args, **kwargs)
-
+        self.transport.status = 'busy'
+        self.transport.save()
+    
     def get_booking_duration(self):
-        # Обчислення різниці між поточним часом і кінцем бронювання
         now = timezone.now()
         duration = self.booking_end_time - now
         return duration
@@ -97,3 +101,11 @@ class Booking(models.Model):
     class Meta:
         verbose_name = 'Бронювання'
         verbose_name_plural = 'Бронювання'
+
+
+
+
+
+@receiver(post_delete, sender=Booking)
+def update_transport_status_on_booking_delete(sender, instance, **kwargs):
+    instance.transport.check_and_update_status()
