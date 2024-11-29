@@ -1,0 +1,11 @@
+{% extends 'booking_app/base.html' %}
+
+{% block content %}
+    <h2>Інформація про акаунт</h2>
+    <ul>
+        <li><strong>Ім'я користувача:</strong> {{ user.username }}</li>
+        <li><strong>Email:</strong> {{ user.email }}</li>
+        <li><strong>Номер телефону:</strong> {{ user.phone_number }}</li>
+        <li><strong>Дата приєднання:</strong> {{ user.date_joined }}</li>
+    </ul>
+{% endblock %}
